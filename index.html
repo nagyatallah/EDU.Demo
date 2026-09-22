@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<!--
+  ===========================================================================
+  EDIT-ME CHECKLIST before you upload this file to cPanel:
+  1. Company name: search for "Cyprus Gateway Education" and replace everywhere.
+  2. Contact info: search for "+90 000 000 0000", "advisor@yourcompany.com",
+     and the office address line in the Contact section.
+  3. University cards: search for "Add University Name" (4 places) and swap
+     in your real partner universities.
+  4. Logo: currently just styled text. Swap the <span class="logo"> markup
+     for an <img> if you have a logo file.
+  5. Rename this file to index.html (it already is) and upload it into
+     public_html via cPanel File Manager, or via FTP.
+  ===========================================================================
+-->
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyprus Gateway Education — Study Abroad in North Cyprus</title>
+    <meta name="description"
+        content="Study abroad guidance for North Cyprus universities: admissions, visas, housing, and certified exam preparation for students worldwide.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=Inter:wght@400;600;700&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+        :root {
+            --ink: #16242B;
+            --paper: #ffffff;
+            --paper-2: #ffffff;
+            --harbor: #16394A;
+            --harbor-2: #0F2A37;
+            --aegean: #2E6E6E;
+            --brick: #2273a8;
+            --gold: #ffffff;
+            --line: rgba(22, 36, 43, 0.14);
+            --line-soft: rgba(22, 36, 43, 0.08);
+            --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-arabic: 'Cairo', 'Inter', sans-serif;
+            --max: 1180px;
+            --section-pad: 54px;
+            --section-head-margin: 32px;
+        }
+
+        /* Compact spacing on laptop / desktop screen sizes */
+        @media (min-width: 880px) {
+            :root {
+                --section-pad: 30px;
+                --section-head-margin: 20px;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--font-body);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html[dir="rtl"] body {
+            font-family: var(--font-arabic);
+        }
+
+        html[dir="rtl"] h1,
+        html[dir="rtl"] h2,
+        html[dir="rtl"] h3 {
+            font-family: var(--font-arabic);
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .wrap {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 10px 24px;
+        }
+
+        @media (min-width:900px) {
+            .wrap {
+                padding: 10px 40px;
+            }
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            line-height: 1.1;
+            margin: 0;
+            color: var(--harbor-2);
+        }
+
+        p {
+            margin: 0;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--brick);
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ---------- Header ---------- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(231, 236, 243, 0.92);
+            backdrop-filter: saturate(140%) blur(6px);
+            border-bottom: 1px solid var(--line-soft);
+        }
+
+        .nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            gap: 16px;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.28rem;
+            font-weight: 600;
+            color: #1c4f80;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        nav.primary {
+            display: none;
+        }
+
+        @media (min-width:940px) {
+            nav.primary {
+                display: flex;
+                gap: 32px;
+                align-items: center;
+                font-size: 0.98rem;
+            }
+
+            nav.primary a {
+                text-decoration: none;
+                color: var(--ink);
+                position: relative;
+                padding: 4px 0;
+            }
+
+            nav.primary a:hover {
+                color: var(--brick);
+            }
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 2px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 3px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .lang-switch button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 999px;
+            color: var(--ink);
+            opacity: 0.55;
+        }
+
+        .lang-switch button.active {
+            background: var(--harbor-2);
+            color: var(--paper);
+            opacity: 1;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 12px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: transform .15s ease, background .15s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: var(--brick);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #2273a8;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--harbor-2);
+            border-color: var(--line);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(22, 57, 74, 0.06);
+        }
+
+        .btn-invert {
+            background: var(--paper);
+            color: var(--harbor-2);
+        }
+
+        .nav-cta {
+            display: none;
+        }
+
+        @media (min-width:940px) {
+            .nav-cta {
+                display: inline-flex;
+            }
+        }
+
+        .menu-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            background: none;
+            cursor: pointer;
+        }
+
+        @media (min-width:940px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
+
+        .menu-toggle span,
+        .menu-toggle::before,
+        .menu-toggle::after {
+            content: "";
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: var(--ink);
+            position: relative;
+        }
+
+        .menu-toggle {
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        #mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+            border-top: 1px solid var(--line-soft);
+            background: var(--paper);
+        }
+
+        #mobile-menu.open {
+            display: flex;
+        }
+
+        #mobile-menu a {
+            padding: 14px 24px;
+            text-decoration: none;
+            color: var(--ink);
+            border-bottom: 1px solid var(--line-soft);
+            font-size: 1.02rem;
+        }
+
+        @media (min-width:940px) {
+            #mobile-menu {
+                display: none !important;
+            }
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            padding: 44px 0 48px;
+            display: grid;
+            gap: 32px;
+        }
+
+        @media (min-width:880px) {
+            .hero {
+                grid-template-columns: 1.05fr 0.95fr;
+                align-items: center;
+                padding: 40px 0 32px;
+                gap: 40px;
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.1rem, 5vw, 3.4rem);
+            letter-spacing: -0.01em;
+            max-width: 16ch;
+        }
+
+        .hero p.sub {
+            margin-top: 16px;
+            max-width: 46ch;
+            font-size: 1.05rem;
+            color: #33474F;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .route-fig {
+            position: relative;
+        }
+
+        .route-fig svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .route-line {
+            stroke-dasharray: 620;
+            stroke-dashoffset: 620;
+            animation: draw 1.8s ease-out 0.3s forwards;
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .route-dot {
+            opacity: 0;
+            animation: fadeIn .5s ease-out forwards;
+        }
+
+        .route-dot.d1 {
+            animation-delay: 0.3s;
+        }
+
+        .route-dot.d2 {
+            animation-delay: 2s;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .route-label {
+            font-size: 13px;
+            font-family: var(--font-body);
+            fill: var(--harbor-2);
+            font-weight: 600;
+        }
+
+        /* ---------- Section shells ---------- */
+        section {
+            padding: var(--section-pad) 0;
+            scroll-margin-top: 72px;
+        }
+
+        .section-head {
+            max-width: 60ch;
+            margin-bottom: var(--section-head-margin);
+        }
+
+        .section-head h2 {
+            font-size: clamp(1.7rem, 3.4vw, 2.35rem);
+        }
+
+        .section-head p {
+            margin-top: 14px;
+            color: #3B4E56;
+            font-size: 1.04rem;
+            max-width: 52ch;
+        }
+
+        .band {
+            background: var(--harbor-2);
+            color: var(--paper);
+        }
+
+        .band h2,
+        .band h3 {
+            color: var(--paper);
+        }
+
+        .band .section-head p {
+            color: #C9D6D3;
+        }
+
+        /* ---------- About ---------- */
+        .about-grid {
+            display: grid;
+            gap: 36px;
+        }
+
+        @media (min-width:860px) {
+            .about-grid {
+                grid-template-columns: 1fr 1fr;
+                align-items: start;
+                gap: 64px;
+            }
+        }
+
+        .about-grid p.lead {
+            font-size: 1.12rem;
+            color: #243C45;
+        }
+
+        .facts {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .facts li {
+            padding: 16px 0;
+            border-top: 1px solid var(--line);
+            display: flex;
+            gap: 14px;
+            align-items: baseline;
+            font-size: 1rem;
+        }
+
+        .facts li:last-child {
+            border-bottom: 1px solid var(--line);
+        }
+
+        .facts li::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--brick);
+            flex: none;
+            transform: translateY(-2px);
+        }
+
+        /* ---------- Programs (auto-rolling) ---------- */
+        .programs-carousel {
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 22px;
+            width: max-content;
+            animation: scrollX 34s linear infinite;
+        }
+
+        .programs-carousel:hover .carousel-track,
+        .programs-carousel:focus-within .carousel-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollX {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .u-card {
+            flex: 0 0 300px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 26px 24px;
+            background: rgba(255, 255, 255, 0.35);
+            border-top: 4px solid var(--aegean);
+        }
+
+        .u-card.c-nicosia {
+            border-top-color: var(--aegean);
+        }
+
+        .u-card.c-famagusta {
+            border-top-color: var(--brick);
+        }
+
+        .u-card.c-kyrenia {
+            border-top-color: var(--gold);
+        }
+
+        .u-card .city-tag {
+            font-size: 0.85rem;
+            color: #4C5D63;
+            font-weight: 600;
+        }
+
+        .u-card h3 {
+            font-size: 1.28rem;
+            margin-top: 6px;
+        }
+
+        .u-card .field {
+            margin-top: 10px;
+            color: #33474F;
+            font-size: 0.98rem;
+        }
+
+        .u-card .degrees {
+            margin-top: 14px;
+            font-size: 0.9rem;
+            color: #5A6B70;
+        }
+
+        /* ---------- Exam ---------- */
+        .exam-row {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: 1fr;
+            margin-top: 6px;
+        }
+
+        @media (min-width:760px) {
+            .exam-row {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .exam-card {
+            border: 1px solid rgba(243, 238, 220, 0.22);
+            border-radius: 10px;
+            padding: 22px 20px;
+            background: rgba(243, 238, 220, 0.06);
+        }
+
+        .exam-card h3 {
+            font-size: 1.15rem;
+        }
+
+        .exam-card p {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #C9D6D3;
+        }
+
+        .exam-card .support {
+            margin-top: 14px;
+            font-size: 0.82rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* ---------- Single Location & Maps (Side-by-Side) ---------- */
+        .location-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+            align-items: stretch;
+            margin-top: 6px;
+        }
+
+        @media (min-width: 900px) {
+            .location-layout {
+                grid-template-columns: 1fr 1.15fr;
+                gap: 28px;
+            }
+        }
+
+        .location-info-card {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.55);
+            padding: 26px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 8px 24px rgba(22, 36, 43, 0.05);
+            border-top: 4px solid var(--brick);
+        }
+
+        .loc-header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--aegean);
+            margin-bottom: 12px;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--aegean);
+            display: inline-block;
+        }
+
+        .location-info-card h3 {
+            font-size: 1.4rem;
+            color: var(--harbor-2);
+            margin: 0 0 10px;
+        }
+
+        .loc-desc {
+            font-size: 0.96rem;
+            color: #33474F;
+            line-height: 1.55;
+            margin: 0 0 18px;
+        }
+
+        .loc-details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            border-top: 1px solid var(--line-soft);
+            border-bottom: 1px solid var(--line-soft);
+            padding: 16px 0;
+            margin-bottom: 20px;
+        }
+
+        .loc-detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .loc-detail-icon {
+            color: var(--brick);
+            flex: none;
+            margin-top: 2px;
+        }
+
+        .loc-detail-item strong {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #5A6B70;
+            margin-bottom: 2px;
+        }
+
+        .loc-detail-item p {
+            font-size: 0.94rem;
+            color: var(--ink);
+            margin: 0;
+        }
+
+        .loc-detail-item p a {
+            color: var(--brick);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .loc-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .location-map-card {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(250, 250, 250, 0.63);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 24px rgba(22, 36, 43, 0.06);
+            min-height: 400px;
+        }
+
+        .map-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 16px;
+            background: rgba(236, 228, 204, 0.7);
+            border-bottom: 1px solid var(--line);
+            gap: 10px;
+        }
+
+        .map-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--harbor-2);
+        }
+
+        .map-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2E6E6E;
+            box-shadow: 0 0 0 3px rgba(46, 110, 110, 0.2);
+        }
+
+        .btn-gmaps-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--harbor-2);
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--line);
+            transition: all .15s ease;
+        }
+
+        .btn-gmaps-link:hover {
+            background: #fff;
+            color: var(--brick);
+            border-color: var(--brick);
+        }
+
+        #map-view-canvas.single-loc-map {
+            width: 100%;
+            height: 100%;
+            min-height: 340px;
+            flex: 1;
+            position: relative;
+            background: #ded5be;
+            z-index: 1;
+        }
+
+        .map-card-footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 16px;
+            font-size: 0.82rem;
+            color: #4C5D63;
+            background: rgba(255, 255, 255, 0.5);
+            border-top: 1px solid var(--line-soft);
+            gap: 8px;
+        }
+
+        .map-card-footer span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Leaflet popup styling */
+        .leaflet-popup-content-wrapper {
+            background: var(--paper);
+            color: var(--ink);
+            border-radius: 8px;
+            box-shadow: 0 10px 24px rgba(22, 36, 43, 0.22);
+            border: 1px solid var(--line);
+            font-family: var(--font-body);
+        }
+
+        .leaflet-popup-tip {
+            background: var(--paper);
+        }
+
+        .leaflet-popup-content {
+            margin: 12px 14px;
+            line-height: 1.4;
+        }
+
+        .popup-city-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--harbor-2);
+            margin: 0 0 4px;
+        }
+
+        .popup-city-desc {
+            font-size: 0.83rem;
+            color: #425c66;
+            margin-bottom: 8px;
+            line-height: 1.35;
+        }
+
+        .popup-city-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--brick);
+            text-decoration: none;
+        }
+
+        .popup-city-link:hover {
+            text-decoration: underline;
+        }
+
+        .custom-map-pin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: transform .18s ease;
+        }
+
+        .custom-map-pin:hover {
+            transform: scale(1.15);
+        }
+
+        /* ---------- Contact ---------- */
+        .contact-grid {
+            display: grid;
+            gap: 44px;
+        }
+
+        @media (min-width:900px) {
+            .contact-grid {
+                grid-template-columns: 0.85fr 1.15fr;
+            }
+        }
+
+        .contact-info dl {
+            margin: 22px 0 0;
+        }
+
+        .contact-info dt {
+            font-size: 0.85rem;
+            color: #5A6B70;
+            font-weight: 600;
+            margin-top: 18px;
+        }
+
+        .contact-info dd {
+            margin: 4px 0 0;
+            font-size: 1.05rem;
+        }
+
+        .contact-info dd a {
+            text-decoration: none;
+            border-bottom: 1px solid var(--line);
+        }
+
+        form.inquiry {
+            display: grid;
+            gap: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            gap: 16px;
+        }
+
+        @media (min-width:560px) {
+            .form-row.two {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #2B3D44;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            font-family: var(--font-body);
+            font-size: 0.98rem;
+            padding: 11px 13px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--ink);
+        }
+
+        html[dir="rtl"] input,
+        html[dir="rtl"] select,
+        html[dir="rtl"] textarea {
+            font-family: var(--font-arabic);
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid var(--brick);
+            outline-offset: 1px;
+        }
+
+        /* ---------- Footer ---------- */
+        footer {
+            background: var(--harbor-2);
+            color: #C9D6D3;
+            padding: 48px 0 28px;
+            margin-top: 0;
+        }
+
+        .footer-top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: space-between;
+            padding-bottom: 28px;
+            border-bottom: 1px solid rgba(243, 238, 220, 0.15);
+        }
+
+        footer .logo {
+            color: #ebf1f7;
+        }
+
+        footer p.tagline {
+            margin-top: 10px;
+            max-width: 34ch;
+            color: #AEBEBA;
+            font-size: 0.95rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #C9D6D3;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            padding-top: 20px;
+            font-size: 0.85rem;
+            color: #8FA19C;
+        }
+
+        /* RTL layout nudges */
+        html[dir="rtl"] .facts li::before {
+            order: 2;
+        }
+
+        html[dir="rtl"] .u-card {
+            border-top-width: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="wrap nav-row">
+            <a href="#top" class="logo">EDU NOVA</a>
+
+            <nav class="primary">
+                <a href="#about" data-i18n="nav_about">About</a>
+                <a href="#programs" data-i18n="nav_programs">Programs</a>
+                <a href="#exams" data-i18n="nav_exams">Certified Exams</a>
+                <a href="#locations" data-i18n="nav_locations">Locations</a>
+                <a href="#contact" data-i18n="nav_contact">Contact</a>
+            </nav>
+
+            <div class="header-right">
+                <div class="lang-switch" role="group" aria-label="Language">
+                    <button type="button" data-lang="en" class="active">EN</button>
+                    <button type="button" data-lang="ar">AR</button>
+                    <button type="button" data-lang="tr">TR</button>
+                </div>
+                <a href="#contact" class="btn btn-primary nav-cta" data-i18n="nav_cta">Get in touch</a>
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu"
+                    aria-expanded="false"><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu">
+            <a href="#about" data-i18n="nav_about">About</a>
+            <a href="#programs" data-i18n="nav_programs">Programs</a>
+            <a href="#exams" data-i18n="nav_exams">Certified Exams</a>
+            <a href="#locations" data-i18n="nav_locations">Locations</a>
+            <a href="#contact" data-i18n="nav_contact">Contact</a>
+        </div>
+    </header>
+
+    <main id="top">
+
+        <!-- HERO -->
+        <section class="hero wrap">
+            <div>
+                <h1 data-i18n="hero_h1">Begin your degree on the Mediterranean coast of North Cyprus</h1>
+                <p class="sub" data-i18n="hero_sub">We guide students from around the world through admissions, visas,
+                    and settling in — from the first application to move-in day.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" id="heroWhatsapp" href="https://wa.me/900000000000" target="_blank"
+                        rel="noopener" data-i18n="hero_cta_primary">Chat with an advisor</a>
+                    <a class="btn btn-ghost" href="#programs" data-i18n="hero_cta_secondary">See study programs</a>
+                </div>
+            </div>
+
+            <div class="route-fig" aria-hidden="true">
+                <svg viewBox="0 0 460 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="route-line" d="M40 60 C 140 40, 200 160, 150 200 S 260 300, 410 260" stroke="#A8492E"
+                        stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 8" />
+                    <circle class="route-dot d1" cx="40" cy="60" r="7" fill="#16394A" />
+                    <text class="route-label" x="16" y="38" data-i18n="hero_from">Your city</text>
+                    <circle class="route-dot d2" cx="410" cy="260" r="9" fill="#A8492E" />
+                    <text class="route-label" x="352" y="240" data-i18n="hero_to">North Cyprus</text>
+                    <path
+                        d="M370 250 q40 -70 10 -140 q-30 -55 -80 -55 q-50 0 -70 45 q-15 35 20 70 q35 35 60 55 q30 25 60 25 Z"
+                        fill="#16394A" opacity="0.08" />
+                </svg>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="wrap">
+            <div class="about-grid">
+                <div>
+                    <div class="section-head" style="margin-bottom:20px;">
+                        <h2 data-i18n="about_h2">About us</h2>
+                    </div>
+                    <p class="lead" data-i18n="about_body">Cyprus Gateway Education connects ambitious students with
+                        English-taught university programs across North Cyprus. Our advisors have walked this path
+                        themselves — from choosing a university to settling into a new city — and we use that experience
+                        to make yours simpler.</p>
+                </div>
+                <ul class="facts">
+                    <li data-i18n="fact_1">Partner universities across Nicosia, Famagusta, and Kyrenia</li>
+                    <li data-i18n="fact_2">Application and visa support from start to finish</li>
+                    <li data-i18n="fact_3">Airport pickup and housing assistance on arrival</li>
+                    <li data-i18n="fact_4">Advisors who speak English, Arabic, and Turkish</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PROGRAMS -->
+        <section id="programs" class="wrap">
+            <div class="section-head">
+                <h2 data-i18n="programs_h2">Study abroad programs</h2>
+                <p data-i18n="programs_sub">Foundation, undergraduate, and postgraduate pathways across the fields
+                    students ask for most.</p>
+            </div>
+            <div class="programs-carousel">
+                <div class="carousel-track" id="uniTrack">
+                    <div class="u-card c-nicosia">
+                        <div class="city-tag" data-i18n="city_nicosia">Nicosia</div>
+                        <h3 data-i18n="card_uni_label">Add University Name</h3>
+                        <p class="field" data-i18n="field_medicine">Medicine &amp; Health Sciences</p>
+                        <p class="degrees" data-i18n="degrees_1">Foundation, Bachelor's and Master's degrees</p>
+                    </div>
+                    <div class="u-card c-famagusta">
+                        <div class="city-tag" data-i18n="city_famagusta">Famagusta</div>
+                        <h3 data-i18n="card_uni_label">Add University Name</h3>
+                        <p class="field" data-i18n="field_engineering">Engineering &amp; Architecture</p>
+                        <p class="degrees" data-i18n="degrees_2">Bachelor's and Master's degrees</p>
+                    </div>
+                    <div class="u-card c-kyrenia">
+                        <div class="city-tag" data-i18n="city_kyrenia">Kyrenia</div>
+                        <h3 data-i18n="card_uni_label">Add University Name</h3>
+                        <p class="field" data-i18n="field_business">Business &amp; Economics</p>
+                        <p class="degrees" data-i18n="degrees_1">Foundation, Bachelor's and Master's degrees</p>
+                    </div>
+                    <div class="u-card c-nicosia">
+                        <div class="city-tag" data-i18n="city_nicosia">Nicosia</div>
+                        <h3 data-i18n="card_uni_label">Add University Name</h3>
+                        <p class="field" data-i18n="field_law">Law &amp; Social Sciences</p>
+                        <p class="degrees" data-i18n="degrees_2">Bachelor's and Master's degrees</p>
+                    </div>
+                    <!-- duplicate set for a seamless loop -->
+                    <div class="u-card c-nicosia" aria-hidden="true">
+                        <div class="city-tag" data-i18n="city_nicosia">Nicosia</div>
+                        <h3 data-i18n="card_uni_label">Add University Name</h3>
+                        <p class="field" data-i18n="field_medicine">Medicine &amp; Health Sciences</p>
+                        <p class="degrees" data-i18n="degrees_1">Foundation, Bachelor's and Master's degrees</p>
+                    </div>
+                    <div class="u-card c-famagusta" aria-hidden="true">
+                        <div class="city-tag" data-i18n="city_famagusta">Famagusta</div>
+                        <h3 data-i18n="card_uni_label">Add University Name</h3>
+                        <p class="field" data-i18n="field_engineering">Engineering &amp; Architecture</p>
+                        <p class="degrees" data-i18n="degrees_2">Bachelor's and Master's degrees</p>
+                    </div>
+                    <div class="u-card c-kyrenia" aria-hidden="true">
+                        <div class="city-tag" data-i18n="city_kyrenia">Kyrenia</div>
+                        <h3 data-i18n="card_uni_label">Add University Name</h3>
+                        <p class="field" data-i18n="field_business">Business &amp; Economics</p>
+                        <p class="degrees" data-i18n="degrees_1">Foundation, Bachelor's and Master's degrees</p>
+                    </div>
+                    <div class="u-card c-nicosia" aria-hidden="true">
+                        <div class="city-tag" data-i18n="city_nicosia">Nicosia</div>
+                        <h3 data-i18n="card_uni_label">Add University Name</h3>
+                        <p class="field" data-i18n="field_law">Law &amp; Social Sciences</p>
+                        <p class="degrees" data-i18n="degrees_2">Bachelor's and Master's degrees</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXAMS -->
+        <section id="exams" class="band">
+            <div class="wrap">
+                <div class="section-head">
+                    <h2 data-i18n="exams_h2">Certified exam preparation</h2>
+                    <p data-i18n="exams_sub">Many programs require proof of English proficiency or a placement score —
+                        we prepare you and book the official test.</p>
+                </div>
+                <div class="exam-row">
+                    <div class="exam-card">
+                        <h3>IELTS</h3>
+                        <p data-i18n="exam_ielts_desc">The most widely accepted English test for university admission
+                            worldwide.</p>
+                        <div class="support" data-i18n="exam_support_label">Prep &amp; booking support</div>
+                    </div>
+                    <div class="exam-card">
+                        <h3>TOEFL iBT</h3>
+                        <p data-i18n="exam_toefl_desc">Often required by universities that follow US-style admissions.
+                        </p>
+                        <div class="support" data-i18n="exam_support_label">Prep &amp; booking support</div>
+                    </div>
+                    <div class="exam-card">
+                        <h3>YÖS</h3>
+                        <p data-i18n="exam_yos_desc">The exam some Turkish-medium and dual-track programs ask for.</p>
+                        <div class="support" data-i18n="exam_support_label">Prep &amp; booking support</div>
+                    </div>
+                    <div class="exam-card">
+                        <h3>SAT</h3>
+                        <p data-i18n="exam_sat_desc">Useful if you're also considering universities outside North
+                            Cyprus.</p>
+                        <div class="support" data-i18n="exam_support_label">Prep &amp; booking support</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOCATION -->
+        <section id="locations" class="wrap">
+            <div class="section-head">
+                <h2 data-i18n="locations_h2">Our Location</h2>
+                <p data-i18n="locations_sub">Visit our main student advising center in Nicosia, North Cyprus, or reach
+                    out for directions.</p>
+            </div>
+
+            <div class="location-layout">
+                <!-- Location Info (One Location) -->
+                <div class="location-info-card">
+                    <div>
+                        <div class="loc-header-badge">
+                            <span class="badge-dot"></span>
+                            <span data-i18n="loc_badge_hq">Headquarters &amp; Advising Center</span>
+                        </div>
+
+                        <h3 data-i18n="loc_nicosia_title">Nicosia (Lefkoşa), North Cyprus</h3>
+                        <p class="loc-desc" data-i18n="loc_nicosia_body">Our main office is situated at the heart of
+                            North Cyprus's university hub. We welcome prospective students, parents, and partners for
+                            in-person admissions consultations, document verification, and campus guidance.</p>
+
+                        <div class="loc-details-list">
+                            <div class="loc-detail-item">
+                                <div class="loc-detail-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                                        <circle cx="12" cy="9" r="2.5" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <strong data-i18n="loc_address_label">Address</strong>
+                                    <p data-i18n="loc_address_val">Bedrettin Demirel Ave, Nicosia, North Cyprus</p>
+                                </div>
+                            </div>
+
+                            <div class="loc-detail-item">
+                                <div class="loc-detail-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <polyline points="12 6 12 12 16 14" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <strong data-i18n="loc_hours_label">Office Hours</strong>
+                                    <p data-i18n="loc_hours_val">Monday – Friday: 09:00 – 17:30 (UTC+3)</p>
+                                </div>
+                            </div>
+
+                            <div class="loc-detail-item">
+                                <div class="loc-detail-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <strong data-i18n="loc_contact_label">Direct Line</strong>
+                                    <p><a href="https://wa.me/900000000000" target="_blank" rel="noopener">+90 000 000
+                                            0000 (WhatsApp)</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="loc-actions">
+                        <a href="https://www.google.com/maps/search/?api=1&query=35.1856,33.3823" target="_blank"
+                            rel="noopener" class="btn btn-primary" data-i18n="loc_get_directions">
+                            Get Directions
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                <polyline points="15 3 21 3 21 9" />
+                                <line x1="10" y1="14" x2="21" y2="3" />
+                            </svg>
+                        </a>
+                        <a href="#contact" class="btn btn-ghost" data-i18n="loc_book_visit">Book a visit</a>
+                    </div>
+                </div>
+
+                <!-- Maps View Beside Info -->
+                <div class="location-map-card">
+                    <div class="map-card-header">
+                        <div class="map-header-left">
+                            <span class="map-live-dot"></span>
+                            <span data-i18n="map_view_title">Office Location Map</span>
+                        </div>
+                        <a href="https://www.google.com/maps/search/?api=1&query=35.1856,33.3823" target="_blank"
+                            rel="noopener" class="btn-gmaps-link" id="gmapsExternalLink">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                                <circle cx="12" cy="9" r="2.5" />
+                            </svg>
+                            <span data-i18n="map_view_google">Open in Google Maps</span>
+                        </a>
+                    </div>
+
+                    <div id="map-view-canvas" class="single-loc-map"
+                        aria-label="Interactive map of our Nicosia office location"></div>
+
+                    <div class="map-card-footer">
+                        <span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                                <path d="M2 12h20" />
+                            </svg>
+                            <span data-i18n="map_coords_hint">35.1856° N, 33.3823° E • Nicosia Central</span>
+                        </span>
+                        <span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                            <span data-i18n="map_airport_dist">~25 mins from Ercan Airport (ECN)</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="wrap">
+            <div class="section-head">
+                <h2 data-i18n="contact_h2">Talk to an advisor</h2>
+                <p data-i18n="contact_sub">Tell us where you're applying from and what you'd like to study — we'll reply
+                    within one business day.</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <a class="btn btn-primary" href="https://wa.me/900000000000" target="_blank" rel="noopener"
+                        data-i18n="hero_cta_primary">Chat with an advisor</a>
+                    <dl>
+                        <dt data-i18n="contact_whatsapp_label">WhatsApp</dt>
+                        <dd><a href="https://wa.me/900000000000">+90 000 000 0000</a></dd>
+                        <dt data-i18n="contact_email_label">Email</dt>
+                        <dd><a href="mailto:advisor@yourcompany.com">advisor@yourcompany.com</a></dd>
+                        <dt data-i18n="contact_office_label">Office</dt>
+                        <dd>Nicosia, North Cyprus</dd>
+                    </dl>
+                </div>
+
+                <form class="inquiry" action="mailto:advisor@yourcompany.com" method="post" enctype="text/plain">
+                    <div class="form-row two">
+                        <div>
+                            <label for="f-name" data-i18n="form_name">Full name</label>
+                            <input id="f-name" name="Name" type="text" required>
+                        </div>
+                        <div>
+                            <label for="f-email" data-i18n="form_email">Email</label>
+                            <input id="f-email" name="Email" type="email" required>
+                        </div>
+                    </div>
+                    <div class="form-row two">
+                        <div>
+                            <label for="f-phone" data-i18n="form_phone">Phone / WhatsApp</label>
+                            <input id="f-phone" name="Phone" type="tel">
+                        </div>
+                        <div>
+                            <label for="f-country" data-i18n="form_country">Country</label>
+                            <input id="f-country" name="Country" type="text">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="f-interest" data-i18n="form_interest">Interested in</label>
+                        <select id="f-interest" name="Interest">
+                            <option data-i18n="form_interest_opt1">Undergraduate program</option>
+                            <option data-i18n="form_interest_opt2">Postgraduate program</option>
+                            <option data-i18n="form_interest_opt3">Foundation / pathway year</option>
+                            <option data-i18n="form_interest_opt4">Certified exam preparation</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="f-msg" data-i18n="form_message">Message</label>
+                        <textarea id="f-msg" name="Message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="justify-self:start;"
+                        data-i18n="form_submit">Send inquiry</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="wrap">
+            <div class="footer-top">
+                <div>
+                    <a href="#top" class="logo">EDU NOVA</a>
+                    <p class="tagline" data-i18n="footer_tagline">Helping students worldwide start their degree in North
+                        Cyprus.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#about" data-i18n="nav_about">About</a>
+                    <a href="#programs" data-i18n="nav_programs">Programs</a>
+                    <a href="#exams" data-i18n="nav_exams">Certified Exams</a>
+                    <a href="#locations" data-i18n="nav_locations">Locations</a>
+                    <a href="#contact" data-i18n="nav_contact">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span id="footerYear"></span>
+                <span data-i18n="footer_rights">All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            document.getElementById('footerYear').textContent =
+                'Cyprus Gateway Education © ' + new Date().getFullYear();
+
+            // Mobile menu
+            var toggle = document.getElementById('menuToggle');
+            var menu = document.getElementById('mobile-menu');
+            toggle.addEventListener('click', function () {
+                var open = menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open);
+            });
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () { menu.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); });
+            });
+
+            // ---------------- Translations ----------------
+            var translations = {
+                en: {
+                    nav_about: "About", nav_programs: "Programs", nav_exams: "Certified Exams",
+                    nav_locations: "Locations", nav_contact: "Contact", nav_cta: "Get in touch",
+                    hero_h1: "Begin your degree on the Mediterranean coast of North Cyprus",
+                    hero_sub: "We guide students from around the world through admissions, visas, and settling in — from the first application to move-in day.",
+                    hero_cta_primary: "Chat with an advisor", hero_cta_secondary: "See study programs",
+                    hero_from: "Your city", hero_to: "North Cyprus",
+                    about_h2: "About us",
+                    about_body: "Cyprus Gateway Education connects ambitious students with English-taught university programs across North Cyprus. Our advisors have walked this path themselves — from choosing a university to settling into a new city — and we use that experience to make yours simpler.",
+                    fact_1: "Partner universities across Nicosia, Famagusta, and Kyrenia",
+                    fact_2: "Application and visa support from start to finish",
+                    fact_3: "Airport pickup and housing assistance on arrival",
+                    fact_4: "Advisors who speak English, Arabic, and Turkish",
+                    programs_h2: "Study abroad programs",
+                    programs_sub: "Foundation, undergraduate, and postgraduate pathways across the fields students ask for most.",
+                    card_uni_label: "Add University Name",
+                    city_nicosia: "Nicosia", city_famagusta: "Famagusta", city_kyrenia: "Kyrenia",
+                    field_medicine: "Medicine & Health Sciences", field_engineering: "Engineering & Architecture",
+                    field_business: "Business & Economics", field_law: "Law & Social Sciences",
+                    degrees_1: "Foundation, Bachelor's and Master's degrees",
+                    degrees_2: "Bachelor's and Master's degrees",
+                    exams_h2: "Certified exam preparation",
+                    exams_sub: "Many programs require proof of English proficiency or a placement score — we prepare you and book the official test.",
+                    exam_ielts_desc: "The most widely accepted English test for university admission worldwide.",
+                    exam_toefl_desc: "Often required by universities that follow US-style admissions.",
+                    exam_yos_desc: "The exam some Turkish-medium and dual-track programs ask for.",
+                    exam_sat_desc: "Useful if you're also considering universities outside North Cyprus.",
+                    exam_support_label: "Prep & booking support",
+                    locations_h2: "Our Location",
+                    locations_sub: "Visit our main student advising center in Nicosia, North Cyprus, or reach out for directions.",
+                    loc_badge_hq: "Headquarters & Advising Center",
+                    loc_nicosia_title: "Nicosia (Lefkoşa), North Cyprus",
+                    loc_nicosia_body: "Our main office is situated at the heart of North Cyprus's university hub. We welcome prospective students, parents, and partners for in-person admissions consultations, document verification, and campus guidance.",
+                    loc_address_label: "Address",
+                    loc_address_val: "Bedrettin Demirel Ave, Nicosia, North Cyprus",
+                    loc_hours_label: "Office Hours",
+                    loc_hours_val: "Monday – Friday: 09:00 – 17:30 (UTC+3)",
+                    loc_contact_label: "Direct Line",
+                    loc_get_directions: "Get Directions",
+                    loc_book_visit: "Book a visit",
+                    map_view_title: "Office Location Map",
+                    map_view_google: "Open in Google Maps",
+                    map_coords_hint: "35.1856° N, 33.3823° E • Nicosia Central",
+                    map_airport_dist: "~25 mins from Ercan Airport (ECN)",
+                    contact_h2: "Talk to an advisor",
+                    contact_sub: "Tell us where you're applying from and what you'd like to study — we'll reply within one business day.",
+                    contact_whatsapp_label: "WhatsApp", contact_email_label: "Email", contact_office_label: "Office",
+                    form_name: "Full name", form_email: "Email", form_phone: "Phone / WhatsApp", form_country: "Country",
+                    form_interest: "Interested in",
+                    form_interest_opt1: "Undergraduate program", form_interest_opt2: "Postgraduate program",
+                    form_interest_opt3: "Foundation / pathway year", form_interest_opt4: "Certified exam preparation",
+                    form_message: "Message", form_submit: "Send inquiry",
+                    footer_tagline: "Helping students worldwide start their degree in North Cyprus.",
+                    footer_rights: "All rights reserved."
+                },
+                ar: {
+                    nav_about: "من نحن", nav_programs: "البرامج", nav_exams: "الاختبارات المعتمدة",
+                    nav_locations: "موقعنا", nav_contact: "تواصل معنا", nav_cta: "تواصل معنا",
+                    hero_h1: "ابدأ رحلتك الجامعية على ساحل قبرص الشمالية المتوسطي",
+                    hero_sub: "نرافق الطلاب من جميع أنحاء العالم خلال القبول والتأشيرة والاستقرار — من أول طلب حتى يوم الانتقال.",
+                    hero_cta_primary: "تحدث مع مستشار", hero_cta_secondary: "استعرض البرامج الدراسية",
+                    hero_from: "مدينتك", hero_to: "قبرص الشمالية",
+                    about_h2: "من نحن",
+                    about_body: "تربط Cyprus Gateway Education الطلاب الطموحين ببرامج جامعية باللغة الإنجليزية في قبرص الشمالية. مستشارونا مروا بهذه التجربة بأنفسهم — من اختيار الجامعة إلى الاستقرار في مدينة جديدة — ونستخدم هذه الخبرة لتسهيل رحلتك.",
+                    fact_1: "جامعات شريكة في نيقوسيا وفاماغوستا وكيرينيا",
+                    fact_2: "دعم كامل للطلب والتأشيرة من البداية للنهاية",
+                    fact_3: "استقبال من المطار ومساعدة في السكن عند الوصول",
+                    fact_4: "مستشارون يتحدثون الإنجليزية والعربية والتركية",
+                    programs_h2: "برامج الدراسة في الخارج",
+                    programs_sub: "مسارات تأسيسية وبكالوريوس وماجستير في التخصصات الأكثر طلباً.",
+                    card_uni_label: "أضف اسم الجامعة",
+                    city_nicosia: "نيقوسيا", city_famagusta: "فاماغوستا", city_kyrenia: "كيرينيا",
+                    field_medicine: "الطب والعلوم الصحية", field_engineering: "الهندسة والعمارة",
+                    field_business: "إدارة الأعمال والاقتصاد", field_law: "القانون والعلوم الاجتماعية",
+                    degrees_1: "سنة تأسيسية وبكالوريوس وماجستير",
+                    degrees_2: "بكالوريوس وماجستير",
+                    exams_h2: "التحضير للاختبارات المعتمدة",
+                    exams_sub: "تتطلب برامج كثيرة إثبات إتقان اللغة الإنجليزية أو درجة تحديد مستوى — نجهزك ونحجز الاختبار الرسمي.",
+                    exam_ielts_desc: "الاختبار الأكثر قبولاً عالمياً للقبول الجامعي.",
+                    exam_toefl_desc: "غالباً ما تطلبه الجامعات ذات نظام القبول الأمريكي.",
+                    exam_yos_desc: "الاختبار الذي تطلبه بعض البرامج التي تُدرَّس بالتركية.",
+                    exam_sat_desc: "مفيد إذا كنت تفكر أيضاً بجامعات خارج قبرص الشمالية.",
+                    exam_support_label: "تحضير وحجز",
+                    locations_h2: "موقعنا",
+                    locations_sub: "تفضل بزيارة مركز الإرشاد الطلابي الرئيسي في نيقوسيا، قبرص الشمالية، أو تواصل معنا للإرشادات.",
+                    loc_badge_hq: "المقر الرئيسي ومركز الاستشارات",
+                    loc_nicosia_title: "نيقوسيا (لفكوشا)، قبرص الشمالية",
+                    loc_nicosia_body: "يقع مكتبنا الرئيسي في قلب المركز الجامعي لقبرص الشمالية. نرحب بالطلاب وأولياء الأمور والشركاء للاستشارات المباشرة وتدقيق المستندات والتوجيه الجامعي.",
+                    loc_address_label: "العنوان",
+                    loc_address_val: "شارع بدر الدين دميريل، نيقوسيا، قبرص الشمالية",
+                    loc_hours_label: "أوقات العمل",
+                    loc_hours_val: "الإثنين – الجمعة: 09:00 – 17:30 (توقيت قبرص)",
+                    loc_contact_label: "التواصل المباشر",
+                    loc_get_directions: "الاتجاهات على الخريطة",
+                    loc_book_visit: "حجز موعد زيارة",
+                    map_view_title: "خريطة موقع المكتب",
+                    map_view_google: "فتح في خرائط Google",
+                    map_coords_hint: "35.1856° ش، 33.3823° ق • وسط نيقوسيا",
+                    map_airport_dist: "~25 دقيقة من مطار إرجان (ECN)",
+                    contact_h2: "تحدث مع مستشار",
+                    contact_sub: "أخبرنا من أين تتقدم وما الذي ترغب بدراسته — سنرد خلال يوم عمل واحد.",
+                    contact_whatsapp_label: "واتساب", contact_email_label: "البريد الإلكتروني", contact_office_label: "المكتب",
+                    form_name: "الاسم الكامل", form_email: "البريد الإلكتروني", form_phone: "الهاتف / واتساب", form_country: "الدولة",
+                    form_interest: "أرغب بدراسة",
+                    form_interest_opt1: "برنامج بكالوريوس", form_interest_opt2: "برنامج ماجستير",
+                    form_interest_opt3: "سنة تأسيسية", form_interest_opt4: "التحضير لاختبار معتمد",
+                    form_message: "الرسالة", form_submit: "إرسال الطلب",
+                    footer_tagline: "نساعد الطلاب حول العالم على بدء دراستهم الجامعية في قبرص الشمالية.",
+                    footer_rights: "جميع الحقوق محفوظة."
+                },
+                tr: {
+                    nav_about: "Hakkımızda", nav_programs: "Programlar", nav_exams: "Sertifikalı Sınavlar",
+                    nav_locations: "Konumumuz", nav_contact: "İletişim", nav_cta: "Bize ulaşın",
+                    hero_h1: "Üniversite yolculuğunuza Kuzey Kıbrıs'ın Akdeniz kıyısında başlayın",
+                    hero_sub: "Dünyanın dört bir yanından öğrencilere başvurudan vize sürecine ve yerleşmeye kadar rehberlik ediyoruz.",
+                    hero_cta_primary: "Bir danışmanla görüşün", hero_cta_secondary: "Programları inceleyin",
+                    hero_from: "Şehriniz", hero_to: "Kuzey Kıbrıs",
+                    about_h2: "Hakkımızda",
+                    about_body: "Cyprus Gateway Education, hedefleri olan öğrencileri Kuzey Kıbrıs'taki İngilizce eğitim veren üniversite programlarıyla buluşturur. Danışmanlarımız bu süreci bizzat yaşadı — üniversite seçiminden yeni bir şehre yerleşmeye kadar — ve bu deneyimi sizin yolculuğunuzu kolaylaştırmak için kullanıyoruz.",
+                    fact_1: "Lefkoşa, Gazimağusa ve Girne'de ortak üniversiteler",
+                    fact_2: "Başvurudan vizeye kadar tam destek",
+                    fact_3: "Varışta havaalanı karşılama ve konaklama desteği",
+                    fact_4: "İngilizce, Arapça ve Türkçe konuşan danışmanlar",
+                    programs_h2: "Yurt dışında eğitim programları",
+                    programs_sub: "En çok tercih edilen alanlarda hazırlık, lisans ve yüksek lisans seçenekleri.",
+                    card_uni_label: "Üniversite Adını Ekleyin",
+                    city_nicosia: "Lefkoşa", city_famagusta: "Gazimağusa", city_kyrenia: "Girne",
+                    field_medicine: "Tıp ve Sağlık Bilimleri", field_engineering: "Mühendislik ve Mimarlık",
+                    field_business: "İşletme ve Ekonomi", field_law: "Hukuk ve Sosyal Bilimler",
+                    degrees_1: "Hazırlık, lisans ve yüksek lisans",
+                    degrees_2: "Lisans ve yüksek lisans",
+                    exams_h2: "Sertifikalı sınav hazırlığı",
+                    exams_sub: "Birçok program İngilizce yeterlilik belgesi ister — sizi hazırlar ve resmi sınavınızı ayarlarız.",
+                    exam_ielts_desc: "Dünya genelinde üniversite kabulünde en çok kabul gören İngilizce sınavı.",
+                    exam_toefl_desc: "Amerikan tarzı kabul sistemini izleyen üniversitelerin sıkça istediği sınav.",
+                    exam_yos_desc: "Bazı Türkçe eğitim veren programların istediği sınav.",
+                    exam_sat_desc: "Kuzey Kıbrıs dışındaki üniversiteleri de düşünüyorsanız faydalı olur.",
+                    exam_support_label: "Hazırlık ve kayıt desteği",
+                    locations_h2: "Ofis Konumumuz",
+                    locations_sub: "Lefkoşa, Kuzey Kıbrıs'taki ana öğrenci danışmanlık ofisimizi ziyaret edin veya yol tarifi alın.",
+                    loc_badge_hq: "Genel Merkez ve Danışmanlık Ofisi",
+                    loc_nicosia_title: "Lefkoşa, Kuzey Kıbrıs",
+                    loc_nicosia_body: "Ana ofisimiz, Kuzey Kıbrıs üniversiteler merkezinin kalbinde yer almaktadır. Yüz yüze kabul danışmanlığı, evrak teslimi ve oryantasyon için öğrenci ve velilerimizi bekliyoruz.",
+                    loc_address_label: "Adres",
+                    loc_address_val: "Bedrettin Demirel Cad., Lefkoşa, Kuzey Kıbrıs",
+                    loc_hours_label: "Çalışma Saatleri",
+                    loc_hours_val: "Pazartesi – Cuma: 09:00 – 17:30 (UTC+3)",
+                    loc_contact_label: "Doğrudan Hat",
+                    loc_get_directions: "Yol Tarifi Al",
+                    loc_book_visit: "Ziyaret Ayarla",
+                    map_view_title: "Ofis Konum Haritası",
+                    map_view_google: "Google Haritalar'da Aç",
+                    map_coords_hint: "35.1856° K, 33.3823° D • Lefkoşa Merkez",
+                    map_airport_dist: "Ercan Havalimanı'na ~25 dk (ECN)",
+                    contact_h2: "Bir danışmanla görüşün",
+                    contact_sub: "Nereden başvurduğunuzu ve ne okumak istediğinizi bize bildirin — bir iş günü içinde dönüş yaparız.",
+                    contact_whatsapp_label: "WhatsApp", contact_email_label: "E-posta", contact_office_label: "Ofis",
+                    form_name: "Ad Soyad", form_email: "E-posta", form_phone: "Telefon / WhatsApp", form_country: "Ülke",
+                    form_interest: "İlgilendiğim program",
+                    form_interest_opt1: "Lisans programı", form_interest_opt2: "Yüksek lisans programı",
+                    form_interest_opt3: "Hazırlık yılı", form_interest_opt4: "Sertifikalı sınav hazırlığı",
+                    form_message: "Mesaj", form_submit: "Talebi gönder",
+                    footer_tagline: "Dünyanın dört bir yanından öğrencilerin Kuzey Kıbrıs'ta eğitime başlamasına yardımcı oluyoruz.",
+                    footer_rights: "Tüm hakları saklıdır."
+                }
+            };
+
+            function applyLang(lang) {
+                document.documentElement.lang = lang;
+                document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+                var dict = translations[lang];
+                document.querySelectorAll('[data-i18n]').forEach(function (el) {
+                    var key = el.getAttribute('data-i18n');
+                    if (dict[key] !== undefined) { el.textContent = dict[key]; }
+                });
+                document.querySelectorAll('.lang-switch button').forEach(function (btn) {
+                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+                });
+                if (window._updateMapLang) {
+                    window._updateMapLang(lang);
+                }
+            }
+
+            document.querySelectorAll('.lang-switch button').forEach(function (btn) {
+                btn.addEventListener('click', function () { applyLang(btn.getAttribute('data-lang')); });
+            });
+
+            applyLang('en');
+        })();
+    </script>
+
+    <!-- Leaflet Map Script -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        (function initNorthCyprusMap() {
+            var mapCanvas = document.getElementById('map-view-canvas');
+            if (!mapCanvas) return;
+
+            var officeCoords = [35.1856, 33.3823]; // Nicosia Central
+            var officeZoom = 13;
+            var currentLang = document.documentElement.lang || 'en';
+            var gmapsUrl = 'https://www.google.com/maps/search/?api=1&query=35.1856,33.3823';
+
+            function renderFallback() {
+                mapCanvas.innerHTML = '<iframe title="Location Map" style="width:100%;height:100%;border:0;min-height:340px;" src="https://www.openstreetmap.org/export/embed.html?bbox=33.33,35.15,33.43,35.22&layer=mapnik&marker=35.1856,33.3823" loading="lazy"></iframe>';
+            }
+
+            if (typeof L === 'undefined') {
+                renderFallback();
+                return;
+            }
+
+            try {
+                var map = L.map('map-view-canvas', {
+                    center: officeCoords,
+                    zoom: officeZoom,
+                    scrollWheelZoom: false,
+                    attributionControl: false
+                });
+
+                L.control.attribution({ position: 'bottomright', prefix: false })
+                    .addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>')
+                    .addTo(map);
+
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                    subdomains: 'abcd',
+                    maxZoom: 19
+                }).addTo(map);
+
+                var pinIcon = L.divIcon({
+                    className: 'custom-pin-wrapper',
+                    html: '<div class="custom-map-pin" style="background:#A8492E;width:34px;height:34px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#fff"/></svg></div>',
+                    iconSize: [34, 34],
+                    iconAnchor: [17, 34],
+                    popupAnchor: [0, -32]
+                });
+
+                var marker = L.marker(officeCoords, { icon: pinIcon }).addTo(map);
+
+                function getPopupText(lang) {
+                    if (lang === 'ar') {
+                        return '<div class="popup-city-title">Cyprus Gateway Education</div>' +
+                            '<div class="popup-city-desc">المقر الرئيسي ومركز القبول الجامعي — نيقوسيا، قبرص الشمالية</div>' +
+                            '<a href="' + gmapsUrl + '" target="_blank" rel="noopener" class="popup-city-link">فتح في خرائط Google ↗</a>';
+                    } else if (lang === 'tr') {
+                        return '<div class="popup-city-title">Cyprus Gateway Education</div>' +
+                            '<div class="popup-city-desc">Genel Merkez & Kabul Ofisi — Lefkoşa, Kuzey Kıbrıs</div>' +
+                            '<a href="' + gmapsUrl + '" target="_blank" rel="noopener" class="popup-city-link">Google Haritalar\'da Aç ↗</a>';
+                    }
+                    return '<div class="popup-city-title">Cyprus Gateway Education</div>' +
+                        '<div class="popup-city-desc">Headquarters & Admissions Center — Nicosia, North Cyprus</div>' +
+                        '<a href="' + gmapsUrl + '" target="_blank" rel="noopener" class="popup-city-link">Open in Google Maps ↗</a>';
+                }
+
+                marker.bindPopup(getPopupText(currentLang)).openPopup();
+
+                window._updateMapLang = function (lang) {
+                    currentLang = lang;
+                    marker.setPopupContent(getPopupText(lang));
+                };
+
+            } catch (err) {
+                console.error("Map init failed:", err);
+                renderFallback();
+            }
+        })();
+    </script>
+</body>
+
+</html>
