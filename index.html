@@ -53,6 +53,7 @@
 
         body {
             margin: 0;
+            padding-top: var(--header-h, 100px);
             background: var(--paper);
             color: var(--ink);
             font-family: var(--font-body);
@@ -120,27 +121,49 @@
 
         /* ---------- Header ---------- */
         header {
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 40;
             background: rgba(231, 236, 243, 0.92);
             backdrop-filter: saturate(140%) blur(6px);
             border-bottom: 1px solid var(--line-soft);
+            transition: transform 0.32s ease;
+        }
+
+        header.header-hidden {
+            transform: translateY(-100%);
         }
 
         .nav-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 0;
+            padding: 8px 0;
             gap: 16px;
         }
 
         .logo {
+            display: inline-flex;
+            align-items: center;
             text-decoration: none;
             white-space: nowrap;
-            width: 120px;
-            height: auto;
+            flex: none;
+        }
+
+        header .logo img {
+            height: 92px;
+            width: auto;
+            display: block;
+            margin: -14px 0;
+        }
+
+        @media (max-width: 480px) {
+            header .logo img {
+                height: 64px;
+                margin: -10px 0;
+            }
         }
 
         nav.primary {
@@ -402,7 +425,7 @@
         /* ---------- Section shells ---------- */
         section {
             padding: var(--section-pad) 0;
-            scroll-margin-top: 72px;
+            scroll-margin-top: var(--header-h, 100px);
         }
 
         .section-head {
@@ -488,6 +511,7 @@
         /* ---------- Programs (auto-rolling) ---------- */
         .programs-carousel {
             overflow: hidden;
+            direction: ltr;
             -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
             mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
         }
@@ -963,6 +987,24 @@
             border-bottom: 1px solid rgba(243, 238, 220, 0.15);
         }
 
+        footer .logo {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        footer .logo img {
+            height: 130px;
+            width: auto;
+            margin: -20px 0;
+        }
+
+        @media (max-width: 480px) {
+            footer .logo img {
+                height: 92px;
+                margin: -14px 0;
+            }
+        }
+
         footer p.tagline {
             margin-top: 10px;
             max-width: 34ch;
@@ -1003,6 +1045,7 @@
 
         html[dir="rtl"] .u-card {
             border-top-width: 4px;
+            text-align: right;
         }
     </style>
 </head>
@@ -1386,8 +1429,7 @@
         <div class="wrap">
             <div class="footer-top">
                 <div>
-                    <a href="#top" class="logo"><img src="./footer-logo.png" alt="Logo"
-                            style="width: 120px; height: 120px;"></a>
+                    <a href="#top" class="logo"><img src="./footer-logo.png" alt="Logo"></a>
                     <p class="tagline" data-i18n="footer_tagline">Helping students worldwide start their degree in North
                         Cyprus.</p>
                 </div>
@@ -1410,6 +1452,41 @@
         (function () {
             document.getElementById('footerYear').textContent =
                 'Cyprus Gateway Education © ' + new Date().getFullYear();
+
+            // Keep body/section offsets in sync with the fixed header's real height
+            var headerEl = document.querySelector('header');
+            function syncHeaderHeight() {
+                document.documentElement.style.setProperty('--header-h', headerEl.offsetHeight + 'px');
+            }
+            syncHeaderHeight();
+            window.addEventListener('load', syncHeaderHeight);
+            window.addEventListener('resize', syncHeaderHeight);
+
+            // Hide header when scrolling down, reveal it when scrolling up
+            var lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+            var scrollTicking = false;
+            function handleScroll() {
+                var current = window.pageYOffset || document.documentElement.scrollTop;
+                if (menu && menu.classList.contains('open')) {
+                    scrollTicking = false;
+                    return;
+                }
+                if (current <= 0) {
+                    headerEl.classList.remove('header-hidden');
+                } else if (current > lastScrollY && current > headerEl.offsetHeight) {
+                    headerEl.classList.add('header-hidden');
+                } else if (current < lastScrollY) {
+                    headerEl.classList.remove('header-hidden');
+                }
+                lastScrollY = current;
+                scrollTicking = false;
+            }
+            window.addEventListener('scroll', function () {
+                if (!scrollTicking) {
+                    window.requestAnimationFrame(handleScroll);
+                    scrollTicking = true;
+                }
+            }, { passive: true });
 
             // Mobile menu
             var toggle = document.getElementById('menuToggle');
